@@ -238,7 +238,7 @@ object hof{
 
       /** Реализовать метод filter, который будет возвращать не пустой Option в случае если исходный не пуст и предикат от значения = true */
        def filter(f: T => Boolean): Option[T] = this match {
-         case Option.Some(v) => if (f(v)) this else Option.None
+         case Option.Some(v) if f(v) => this
          case Option.None => Option.None
        }
    }
@@ -266,36 +266,35 @@ object hof{
      import List._
 
      /** Метод cons, добавляет элемент в голову списка, для этого метода можно воспользоваться названием `::` */
-     def ::[A >: T](newHead: A): List[A] = this match {
-       case list: ::[T] => List.::(newHead, list)
-       case Nil => List.::(newHead, Nil)
-     }
+     def ::[A >: T](newHead: A): List[A] = List.::(newHead, this)
 
      /** Метод cons, добавляет элемент в голову списка, для этого метода можно воспользоваться названием `::` */
      def cons[A >: T](newHead: A): List[A] = newHead :: this
 
      /** Метод mkString возвращает строковое представление списка, с учетом переданного разделителя */
-     def mkString(delimiter: String): String = this match {
-       case ::(head, tail) =>
-         @tailrec
-         def loop(list: List[T], string: String): String = list match {
-           case ::(head_, tail_) => loop(tail_, string + delimiter + head_.toString)
-           case Nil => string
-         }
-         loop(tail, head.toString)
-       case Nil => EmptyString
+     def mkString(delimiter: String): String = {
+       @tailrec
+       def loop(list: List[T], string: String): String = list match {
+         case ::(head_, tail_) => loop(tail_, string + delimiter + head_.toString)
+         case Nil => string
+       }
+       this match {
+         case ::(head, tail) => loop(tail, head.toString)
+         case Nil => EmptyString
+       }
      }
 
      /** Реализовать метод reverse который позволит заменить порядок элементов в списке на противоположный */
-     def reverse: List[T] = this match {
-       case l: ::[T] =>
-         @tailrec
-         def loop(list : List[T], newList: List[T]): List[T] = list match {
-           case ::(head, tail) => loop(tail, head :: newList)
-           case Nil => newList
-         }
-         loop(this, Nil)
-       case Nil => Nil
+     def reverse: List[T] = {
+       @tailrec
+       def loop(list : List[T], newList: List[T]): List[T] = list match {
+         case ::(head, tail) => loop(tail, head :: newList)
+         case Nil => newList
+       }
+       this match {
+         case l: ::[T] => loop(this, Nil)
+         case Nil => Nil
+       }
      }
 
      /** Реализовать метод map для списка который будет применять некую ф-цию к элементам данного списка
@@ -304,15 +303,16 @@ object hof{
        * С точки зрения алгоритмизации лучше использовать формирование списка в цикле с использованием локальных var. Также можно использовать рекурсию не хвостовую, но
        * в этом случае ограничиваем возможные размеры обрабатываемого списка (из-за конечности стека)</p>
        * */
-     def map[A](f: T => A): List[A] = this match {
-       case list: ::[T] =>
-         @tailrec
-         def loop(listT: List[T], listA: List[A]): List[A] = listT match {
-           case ::(head, tail) => loop(tail, f(head) :: listA)
-           case Nil => listA
-         }
-         loop(list, Nil).reverse
-       case Nil => Nil
+     def map[A](f: T => A): List[A] = {
+       @tailrec
+       def loop(listT: List[T], listA: List[A]): List[A] = listT match {
+         case ::(head, tail) => loop(tail, f(head) :: listA)
+         case Nil => listA
+       }
+       this match {
+         case list: ::[T] => loop(list, Nil).reverse
+         case Nil => Nil
+       }
      }
 
      /** Реализовать метод filter для списка который будет фильтровать список по некому условию
@@ -321,16 +321,17 @@ object hof{
        * С точки зрения алгоритмизации лучше использовать формирование списка в цикле с использованием локальных var. Также можно использовать рекурсию не хвостовую, но
        * в этом случае ограничиваем возможные размеры обрабатываемого списка (из-за конечности стека)</p>
        */
-     def filter(f: T => Boolean): List[T] = this match {
-       case list: ::[T] =>
-         @tailrec
-         def loop(listT: List[T], newList: List[T]): List[T] = listT match {
-           case ::(head, tail) =>
-             if (f(head)) loop(tail, head :: newList) else loop(tail, newList)
-           case List.Nil => newList
-         }
-         loop(this, Nil).reverse
-       case Nil => Nil
+     def filter(f: T => Boolean): List[T] = {
+       @tailrec
+       def loop(listT: List[T], newList: List[T]): List[T] = listT match {
+         case ::(head, tail) =>
+           if (f(head)) loop(tail, head :: newList) else loop(tail, newList)
+         case List.Nil => newList
+       }
+       this match {
+         case list: ::[T] => loop(this, Nil).reverse
+         case Nil => Nil
+       }
      }
 
    }
