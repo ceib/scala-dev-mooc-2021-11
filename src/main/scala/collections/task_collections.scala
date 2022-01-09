@@ -1,6 +1,12 @@
 package collections
 
-object task_collections {
+import sun.security.ec.point.ProjectivePoint.Mutable
+
+import scala.collection.immutable.Iterable.from
+import scala.collection.mutable
+import scala.collection.mutable.ListBuffer
+
+object task_collections extends App {
 
   def isASCIIString(str: String): Boolean = str.matches("[A-Za-z]+")
 
@@ -10,14 +16,33 @@ object task_collections {
    * если isASCIIString is FALSE тогда пусть каждый элемент строки будет в нижнем регистре
    * Пример:
    * capitalizeIgnoringASCII(List("Lorem", "ipsum" ,"dolor", "sit", "amet")) -> List("Lorem", "IPSUM", "DOLOR", "SIT", "AMET")
-   * capitalizeIgnoringASCII(List("Оказывается", "," "ЗвУк", "КЛАВИШЬ", "печатной", "Машинки", "не", "СТАЛ", "ограничивающим", "фактором")) ->
-   * List("Оказывается", "," "звук", "КЛАВИШЬ", "печатной", "машинки", "не", "стал", "ограничивающим", "фактором")
+   * capitalizeIgnoringASCII(List("Оказывается", "," , "ЗвУк", "КЛАВИШЬ", "печатной", "Машинки", "не", "СТАЛ", "ограничивающим", "фактором")) ->
+   * List("Оказывается", "," , "звук", "КЛАВИШЬ", "печатной", "машинки", "не", "стал", "ограничивающим", "фактором")
    * HINT: Тут удобно использовать collect и zipWithIndex
    *
    * **/
   def capitalizeIgnoringASCII(text: List[String]): List[String] = {
-    List.empty
+    def mapFunc(word: String): String = {
+      if (isASCIIString(word)) word.toUpperCase
+      else word.toLowerCase
+    }
+
+    text match {
+      case Nil => Nil
+      case _ :: Nil => text
+      case head :: tail => head :: tail.map(mapFunc)
+    }
   }
+
+  val testCase1 = List(
+    List(),
+    List("Ones"),
+    List("first", "second"),
+    List("Lorem", "ipsum", "dolor", "sit", "amet"),
+    List("Оказывается", ",", "ЗвУк", "КЛАВИШЬ", "печатной", "Машинки", "не", "СТАЛ", "ограничивающим", "фактором")
+  )
+  testCase1.foreach(w=>println(capitalizeIgnoringASCII(w)))
+
 
   /**
    *
@@ -29,8 +54,13 @@ object task_collections {
    * HINT: Для всех возможных комбинаций чисел стоит использовать Map
    * **/
   def numbersToNumericString(text: String): String = {
-    ""
+    val cardinalMap = Map(0 -> "zero", 1 -> "one", 2 -> "two", 3 -> "three", 4 -> "four", 5 -> "five", 6 -> "six", 7 -> "seven", 8 -> "eight", 9 -> "nine")
+    text.flatMap(
+      c => if (c.isDigit) cardinalMap.getOrElse(c.asDigit, "?") else c.toString
+    )
   }
+
+  println( numbersToNumericString("There are 2 caps and 3 books"))
 
   /**
    *
@@ -47,8 +77,15 @@ object task_collections {
    * Реализуйте метод который примет две коллекции (два источника) и вернёт объединенный список уникальный значений
    **/
   def intersectionAuto(dealerOne: Iterable[Auto], dealerTwo: Iterable[Auto]): Iterable[Auto] = {
-    Iterable.empty
+    mutable.Set.from(dealerOne).addAll(dealerTwo)
+    // like:
+    // ListBuffer.from(dealerOne).addAll(dealerTwo).distinct
   }
+
+  val dealer1 = List(Auto("ZAZ", "like camel"), Auto("volga", "21"), Auto("BMW", "X5"), Auto("BMW", "X1"))
+  val dealer2 = List(Auto("Moskvich", "407"), Auto("volga", "21"), Auto("BMW", "X5"))
+
+  println(intersectionAuto(dealer1,dealer2))
 
   /**
    * Хотим узнать какие машины обслуживается в первом дилеромском центре, но не обслуживаются во втором
@@ -56,6 +93,10 @@ object task_collections {
    * и вернёт уникальный список машин обслуживающихся в первом дилерском центре и не обслуживающимся во втором
    **/
   def filterAllLeftDealerAutoWithoutRight(dealerOne: Iterable[Auto], dealerTwo: Iterable[Auto]): Iterable[Auto] = {
-    Iterable.empty
+    val one = Set.from(dealerOne)
+    val two = Set.from(dealerTwo)
+    one.diff(two)
   }
+
+  println(filterAllLeftDealerAutoWithoutRight(dealer1,dealer2))
 }
