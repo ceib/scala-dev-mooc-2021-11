@@ -1,6 +1,6 @@
 package module1
 
-object variables {
+object variables extends App {
 
 
   /**
@@ -88,17 +88,22 @@ object variables {
    * Повторяют выполнение своего тела, пока условие истинно. Подразумевают наличие side effect.
    * Отличаются моментом, когда происходит проверка условия ДО или ПОСЛЕ выполнения тела цикла
    */
+  import scala.util.control.Breaks._
 
-   val x4: Unit = while(cond){
+  breakable {
+    val x4: Unit = while (cond) {
       //1 + 1
-   } 
-
+      println("while do")
+      break
+    }
+  }
    
 
-   import scala.util.control.Breaks._
+
 
     breakable{
       do{
+        println("do while")
          if(1 == 1) break
       } while(cond)
     }
@@ -108,12 +113,12 @@ object variables {
    * цикл for позволяет итерироваться по коллекциям, имеет своеобразный синтаксис с обратной стрелочкой
    */
 
-
   lazy val arr: Array[Int] = ???
 
 
-   for(i <- 0 to 10){
-     println(i)
-   }
+  for (i <- 0 to 10 by 3) {
+    println(i)
+  }
+
 
 }
