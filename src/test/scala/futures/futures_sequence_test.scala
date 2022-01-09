@@ -6,6 +6,8 @@ import java.util.concurrent.atomic.AtomicInteger
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, ExecutionContext, Future}
 
+import futures.task_futures_sequence.fullSequence
+
 class futures_sequence_test extends AnyFlatSpec {
 
   def limitedExec(limit: Int): ExecutionContext = new ExecutionContext {
