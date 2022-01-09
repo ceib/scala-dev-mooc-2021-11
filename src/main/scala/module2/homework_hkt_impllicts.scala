@@ -15,7 +15,6 @@ object homework_hkt_impllicts{
     def tupleF[F[_], A, B](fa: Bindable[F, A], fb: Bindable[F, B]): F[(A, B)] =
       fa.flatMap(a => fb.map(b => (a, b) ))
 
-
   trait Bindable[F[_], A] {
         def map[B](f: A => B): F[B]
         def flatMap[B](f: A => F[B]): F[B]
