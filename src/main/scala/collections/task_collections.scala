@@ -3,7 +3,7 @@ package collections
 import sun.security.ec.point.ProjectivePoint.Mutable
 
 import scala.collection.immutable.Iterable.from
-import scala.collection.mutable
+import scala.collection.{immutable, mutable}
 import scala.collection.mutable.ListBuffer
 
 object task_collections extends App {
@@ -34,6 +34,13 @@ object task_collections extends App {
     }
   }
 
+  def capitalizeIgnoringASCII_2(text: List[String]): List[String] = {
+    text.zipWithIndex.collect {
+      case (st, 0) => st
+      case (st, _) => if (isASCIIString(st)) st.toUpperCase() else st.toLowerCase()
+    }
+  }
+
   val testCase1 = List(
     List(),
     List("Ones"),
@@ -42,6 +49,7 @@ object task_collections extends App {
     List("Оказывается", ",", "ЗвУк", "КЛАВИШЬ", "печатной", "Машинки", "не", "СТАЛ", "ограничивающим", "фактором")
   )
   testCase1.foreach(w=>println(capitalizeIgnoringASCII(w)))
+  testCase1.foreach(w=>println(capitalizeIgnoringASCII_2(w)))
 
 
   /**
@@ -77,8 +85,9 @@ object task_collections extends App {
    * Реализуйте метод который примет две коллекции (два источника) и вернёт объединенный список уникальный значений
    **/
   def intersectionAuto(dealerOne: Iterable[Auto], dealerTwo: Iterable[Auto]): Iterable[Auto] = {
-    mutable.Set.from(dealerOne).addAll(dealerTwo)
+    immutable.Set.from(dealerOne ++ dealerTwo).toList
     // like:
+    //mutable.Set.from(dealerOne).addAll(dealerTwo)
     // ListBuffer.from(dealerOne).addAll(dealerTwo).distinct
   }
 
