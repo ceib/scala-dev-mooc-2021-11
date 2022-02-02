@@ -267,7 +267,7 @@ object zioOperators {
     * A as B
     */
 
-    
+
 
 
   def readFile(fileName: String): ZIO[Any, IOException, String] = ???
@@ -275,6 +275,5 @@ object zioOperators {
   // из эффекта с ошибкой, в эффект который не падает
 
   val d: URIO[Any,String] = readFile("").orDie
-
   
 }
