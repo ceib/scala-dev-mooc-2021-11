@@ -12,7 +12,7 @@ import module3.di
 object App {
 
   def main(args: Array[String]): Unit = {
-    zio.Runtime.default.unsafeRun(di.e1)
+    zio.Runtime.default.unsafeRun(???)
   }
 
 }

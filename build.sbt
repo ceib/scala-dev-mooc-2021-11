@@ -9,6 +9,7 @@ lazy val root = (project in file("."))
     version := "0.1",
     scalaVersion := "2.13.3",
     libraryDependencies ++= Dependencies.zio,
+    libraryDependencies ++= Dependencies.pureconfig,
     libraryDependencies ++= Seq(
       kindProjector
     ),

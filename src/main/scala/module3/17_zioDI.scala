@@ -73,7 +73,7 @@ object di {
     _ <- console.putStrLn(int.toString())
   } yield ()
 
-  lazy val getUser: RIO[UserService, User] = 
+  lazy val getUser: RIO[UserService with LoggingService, User] = 
     ZIO.environment[UserService].flatMap(_.getUserBy(1).orDie)
 
   lazy val sendMail: ZIO[EmailService, Throwable, Unit] = ???
@@ -82,14 +82,14 @@ object di {
   /**
    * Эффект, который будет комбинацией двух эффектов выше
    */
-  lazy val combined2: ZIO[UserService with EmailService, Throwable, (User, Unit)] = 
+  lazy val combined2: ZIO[UserService with EmailService with LoggingService, Throwable, (User, Unit)] = 
     getUser <*> sendMail
 
 
   /**
    * Написать ZIO программу которая выполнит запрос и отправит email
    */
-  val queryAndNotify: ZIO[UserService with EmailService, Throwable, Unit] = for{
+  val queryAndNotify: ZIO[UserService with EmailService with LoggingService, Throwable, Unit] = for{
     userService <- ZIO.environment[UserService]
     emailService <- ZIO.environment[EmailService]
     user <- userService.getUserBy(1)
@@ -99,14 +99,14 @@ object di {
 
 
 
-  lazy val services: UserService with EmailService = ???
+  lazy val services: UserService with EmailService with LoggingService = ???
 
   lazy val dBService: DBService = ???
   lazy val userService: UserService = ???
 
   lazy val emailService2: EmailService = ???
 
-  def f(userService: UserService): UserService with EmailService = ???
+  def f(userService: UserService): UserService with EmailService with LoggingService = ???
 
   // provide
   lazy val e3: IO[Throwable, Unit] = queryAndNotify.provide(services)
