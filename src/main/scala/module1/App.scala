@@ -8,6 +8,7 @@ import zio.ZEnv
 import zio.ZIO
 import module3.zioConcurrency
 import module3.di
+import module3.zioDS
 
 object App {
 
@@ -19,6 +20,6 @@ object App {
 
 object ZioApp extends zio.App{
   def run(args: List[String]): URIO[ZEnv, ExitCode] = {
-    zioConcurrency.printEffectRunningTime(zioConcurrency.app3).exitCode
+    zioConcurrency.printEffectRunningTime(???).exitCode
   }
 }

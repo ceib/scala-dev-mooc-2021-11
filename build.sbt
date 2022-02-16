@@ -17,7 +17,7 @@ lazy val root = (project in file("."))
     addCompilerPlugin(Dependencies.kindProjector)
   )
 
-// testFrameworks := Seq(new TestFramework("zio.test.sbt.ZTestFramework"))
+ testFrameworks := Seq(new TestFramework("zio.test.sbt.ZTestFramework"))
 
 scalacOptions += "-Ymacro-annotations"
 

@@ -15,6 +15,7 @@ package object userDAO {
         trait Service{
             def list(): Task[List[User]]
             def findBy(id: UserID): Task[Option[User]]
+           // def find[T](id: T): Task[Option[User]]
         }
 
         val live: ULayer[UserDAO] = ???
