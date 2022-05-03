@@ -2,7 +2,7 @@ package module3
 
 import scala.io.StdIn
 
-object functional_effects {
+object functional_effects extends App {
 
 
   object simpleProgram {
@@ -39,7 +39,7 @@ object functional_effects {
        * 1. Объявить исполняемую модель Console
        */
        case class Console[A](unsafeRun: () => A){ self =>
-            def map[B](f: A => B): Console[B] = ???
+            def map[B](f: A => B): Console[B] =  Console.succeed(f(self.unsafeRun()))
             def flatMap[B](f: A => Console[B]): Console[B] = 
                 Console.succeed(f(self.unsafeRun()).unsafeRun())
        }
@@ -105,7 +105,7 @@ object functional_effects {
 
 
               def flatMap[B](f: A => Console[B]): Console[B] = console match {
-                  case Println(str, rest) => 
+                  case Println(str, rest) =>
                       Println(str, rest.flatMap(f))
                   case ReadLine(ff) => ReadLine(str => ff(str).flatMap(f))
                   case Return(v) => f(v())
@@ -177,5 +177,14 @@ object functional_effects {
     }
 
   }
+  //usage
+  {
+    import functionalProgram.declarativeEncoding._
+    interpret(p4)
+  }
 
+  {
+    import functionalProgram.executableEncoding._
+    p1.unsafeRun()
+  }
 }
