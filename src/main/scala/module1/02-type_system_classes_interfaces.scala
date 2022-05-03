@@ -6,7 +6,7 @@ import scala.io.BufferedSource
 import java.io.InputStreamReader
 import scala.io.Source
 
-object type_system {
+object type_system extends App {
 
   /**
    * Scala type system
@@ -133,6 +133,7 @@ object type_system {
 
 
    // создать case класс кредитная карта с двумя полями номер и cvc
+
   case class CreditCard(num: String, private val cvc: Short) {
     def cvcCheck(cvc: Short): Boolean = this.cvc == cvc
   }
@@ -147,7 +148,16 @@ object type_system {
    * Используются для создания перечислений или же в качестве сообщений для Акторов
    */
 
+  //enum
+  sealed trait Language
+  case object Russian extends Language
+  case object Estonian extends Language
+  case object French extends Language
 
+  //usage enum
+  case class Book(name: String,
+                  original: Language,
+                  translated: Seq[Language])
 
   /**
    * trait
@@ -219,5 +229,19 @@ object type_system {
    * Value classes и Universal traits
    */
 
+  class Meter(val value: Double) extends AnyVal {
+    def +(m: Meter): Meter = new Meter(value + m.value)
+  }
+  val x = new Meter(3.4)
+  val y = new Meter(4.3)
+  val z = x + y
+  println(z.value)
 
+  trait Printable extends Any {
+    def print(): Unit = println(this)
+  }
+  class Wrapper(val underlying: Int) extends AnyVal with Printable
+
+  val w = new Wrapper(3)
+  w.print() // actually requires instantiating a Wrapper instance
 }

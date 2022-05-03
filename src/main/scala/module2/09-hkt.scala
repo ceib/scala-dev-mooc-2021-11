@@ -1,6 +1,6 @@
 package module2
 
-object higher_kinded_types{
+object higher_kinded_types extends App {
 
   def tuple[A, B](a: List[A], b: List[B]): List[(A, B)] =
     a.flatMap{ a => b.map((a, _))}

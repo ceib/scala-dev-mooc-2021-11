@@ -1,10 +1,11 @@
 package module3
 
-import zio.ZIO
-import zio.Task
+import module3.zioRecursion.{factorialZ, fibZ}
+import zio.{ExitCode, Task, URIO, ZIO}
+
 import scala.io.StdIn
 
-object zioRecursion {
+object zioRecursion extends App {
 
 
 
@@ -12,7 +13,7 @@ object zioRecursion {
    * Создать ZIO эффект котрый будет читать число в виде строки из консоли 
    */
 
-   lazy val readLine: Task[String] = ZIO.effect(StdIn.readLine())
+  lazy val readLine: Task[String] = ZIO.effect(println("DВведите число")) *> ZIO.effect(StdIn.readLine())
 
 
   /** *
@@ -33,6 +34,7 @@ object zioRecursion {
     ZIO.effect(println("Не корректный ввод, попробуйте еще")) *> readIntOrRetry
   )
 
+  //zio.Runtime.default.unsafeRun(readIntOrRetry)
 
   /**
    * Считаем факториал
@@ -58,8 +60,17 @@ object zioRecursion {
   }
 
 
+  def fibZ(n: Int): Task[Int] = {
+    if (n == 0 || n == 1) ZIO.succeed(n)
+    else fibZ(n - 1).zipWith( fibZ(n - 2))(_ + _)
+  }
 
-  def fibZ(n: Int) = ???
+//  zio.Runtime.default.unsafeRun(fibZ(4))
 
-
+}
+object ZioApp extends zio.App {
+  override def run(args: List[String]): URIO[zio.ZEnv, ExitCode] = {
+//    fibZ(5).flatMap( x => ZIO.effect(println(s"x= $x"))).exitCode
+    fibZ(5).flatMap( x => ZIO.effect(zio.console.putStrLn(s"x= $x"))).exitCode
+  }
 }
