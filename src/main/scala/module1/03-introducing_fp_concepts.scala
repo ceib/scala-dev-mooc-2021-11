@@ -95,6 +95,15 @@ object recursion extends App  {
     case x => fib(x - 1) + fib(x - 2)
   }
 
+  def fib(n: Int): Int = {
+    @tailrec
+    def loop(si: Int, si_1: Int, n: Int): Int = {
+      if (n == 1) si
+      else loop(si + si_1, si, n-1)
+    }
+    if (n == 0) 0 else loop(1, 0, n)
+  }
+
   def fib(n: Int): Long = {
     @tailrec
     def fibNext(x: Int, m1: Long, m2: Long): Long = x match {

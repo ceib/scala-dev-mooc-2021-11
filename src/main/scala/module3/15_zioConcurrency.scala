@@ -32,7 +32,7 @@ object zioConcurrency {
     start <- currentTime
     z <- zio
     finish <- currentTime
-    _ <- putStrLn(s"Running time: ${finish - start}")
+    _ <- putStrLn(s"Running time: ${finish - start}").orDie
   } yield z
 
 
@@ -115,7 +115,7 @@ object zioConcurrency {
    * 
    */
 
- lazy val hello: ZIO[Console, Nothing, Unit] = putStrLn("Hello") *> hello
+ lazy val hello: ZIO[Console, Nothing, Unit] = (putStrLn("Hello") *> hello).orDie
 
  lazy val greeter2 = for{
      f1 <- hello.fork

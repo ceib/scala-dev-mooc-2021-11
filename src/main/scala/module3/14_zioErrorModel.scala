@@ -106,10 +106,7 @@ object zioErrorHandling {
   /**
    * Залогировать ошибку effFromEither, не меняя ее тип и тип возвращаемого значения
    */
-  lazy val z2: zio.ZIO[Console, String, Int] = effFromEither.tapError{ e =>
-      zio.console.putStrLn(e)
-  }
-
+  lazy val z2: zio.ZIO[Console, String, Int] = ???
   /**
    * Изменить ошибку effFromEither
    */

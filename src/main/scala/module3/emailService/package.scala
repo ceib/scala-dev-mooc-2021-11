@@ -20,7 +20,7 @@ package object emailService {
 
         val live: ULayer[EmailService] = ZLayer.succeed(new Service {
             def sendMail(email: Email): URIO[zio.console.Console,Unit] = 
-                zio.console.putStrLn(email.toString())
+                zio.console.putStrLn(email.toString()).orDie
         })
     }
 
