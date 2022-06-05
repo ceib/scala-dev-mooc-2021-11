@@ -15,8 +15,13 @@ object task_collections {
    * HINT: Тут удобно использовать collect и zipWithIndex
    *
    * **/
-  def capitalizeIgnoringASCII(text: List[String]): List[String] = {
-    List.empty
+  def capitalizeIgnoringASCII(text: List[String]): List[String] = text match {
+    case ::(head, tail) =>
+      head :: tail.collect{
+        case str: String if isASCIIString(str) => str.toUpperCase()
+        case str: String => str.toLowerCase
+      }
+    case Nil => Nil
   }
 
   /**
@@ -29,7 +34,51 @@ object task_collections {
    * HINT: Для всех возможных комбинаций чисел стоит использовать Map
    * **/
   def numbersToNumericString(text: String): String = {
-    ""
+    val DigitStrings = Map(
+      "1" -> "one",
+      "2" -> "two",
+      "3" -> "three",
+      "4" -> "four",
+      "5" -> "five",
+      "6" -> "six",
+      "7" -> "seven",
+      "8" -> "eight",
+      "9" -> "nine",
+      "0" -> "zero",
+      "10" -> "ten"
+    )
+    text.split(" ").map {
+      case s: String if DigitStrings.contains(s) => DigitStrings(s)
+      case s: String => s
+    }.mkString(" ")
+  }
+
+  /**
+   *
+   * Компьютер сгенерировал текст используя вместо прописных чисел, числа в виде цифр, помогите компьютеру заменить цифры на числа
+   * В тексте встречаются числа от 0 до 9
+   *
+   * Реализуйте метод который цифровые значения в строке заменяет на числа: 1 -> one, 2 -> two
+   *
+   * HINT: Для всех возможных комбинаций чисел стоит использовать Map
+   * **/
+  def numbersToNumericStringForSingleDigitsOnly(text: String): String = {
+    val DigitStrings = Map(
+      "1" -> "one",
+      "2" -> "two",
+      "3" -> "three",
+      "4" -> "four",
+      "5" -> "five",
+      "6" -> "six",
+      "7" -> "seven",
+      "8" -> "eight",
+      "9" -> "nine",
+      "0" -> "zero"
+    )
+    text.flatMap {
+      case c: Char if c.isDigit => DigitStrings.getOrElse(c.toString, c.toString)
+      case c: Char => c.toString
+    }
   }
 
   /**
@@ -47,7 +96,7 @@ object task_collections {
    * Реализуйте метод который примет две коллекции (два источника) и вернёт объединенный список уникальный значений
    **/
   def intersectionAuto(dealerOne: Iterable[Auto], dealerTwo: Iterable[Auto]): Iterable[Auto] = {
-    Iterable.empty
+    (dealerOne ++ dealerTwo).toSet
   }
 
   /**
@@ -56,6 +105,6 @@ object task_collections {
    * и вернёт уникальный список машин обслуживающихся в первом дилерском центре и не обслуживающимся во втором
    **/
   def filterAllLeftDealerAutoWithoutRight(dealerOne: Iterable[Auto], dealerTwo: Iterable[Auto]): Iterable[Auto] = {
-    Iterable.empty
+    dealerOne.toSet diff dealerTwo.toSet
   }
 }
